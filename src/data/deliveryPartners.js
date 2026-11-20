@@ -1,0 +1,127 @@
+export const initialDeliveryPartners = [
+  {
+    id: 'dp-1',
+    code: 'DP-001',
+    name: 'Arun Kumar',
+    phone: '+91 98765 43210',
+    email: 'arun.dp@milkqueen.com',
+    location: 'Coimbatore (North)',
+    vehicleType: 'Bike',
+    vehicleModel: 'Hero Splendor Plus',
+    vehicleNumber: 'TN 37 AB 1234',
+    licenseNumber: 'TN-37-20200004512',
+    totalDeliveries: 482,
+    rating: 4.9,
+    status: 'Active',
+    joinedDate: '12 Jan 2026',
+    todayDeliveries: 10,
+    todayEarnings: 680,
+    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80',
+    documents: {
+      drivingLicense: { name: 'Driving_License_Arun.pdf', verified: true },
+      rcBook: { name: 'Vehicle_RC_Book_TN37AB1234.pdf', verified: true },
+      aadhaar: { name: 'Aadhaar_ArunKumar.pdf', verified: true },
+      bankPassbook: { name: 'SBI_Passbook_Arun.pdf', verified: true }
+    }
+  },
+  {
+    id: 'dp-2',
+    code: 'DP-002',
+    name: 'Karthik S',
+    phone: '+91 98765 43211',
+    email: 'karthik.dp@milkqueen.com',
+    location: 'Coimbatore (West / RS Puram)',
+    vehicleType: 'Scooter',
+    vehicleModel: 'Honda Activa 6G',
+    vehicleNumber: 'TN 37 CD 5678',
+    licenseNumber: 'TN-37-20220008492',
+    totalDeliveries: 420,
+    rating: 4.8,
+    status: 'On Delivery',
+    joinedDate: '16 Jan 2026',
+    todayDeliveries: 8,
+    todayEarnings: 680,
+    avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=400&q=80',
+    documents: {
+      drivingLicense: { name: 'Driving_License_Karthik.pdf', verified: true },
+      rcBook: { name: 'RC_Activa_TN37CD5678.pdf', verified: true },
+      aadhaar: { name: 'Aadhaar_Karthik_S.pdf', verified: true },
+      bankPassbook: { name: 'Canara_Bank_Karthik.pdf', verified: true }
+    }
+  },
+  {
+    id: 'dp-3',
+    code: 'DP-003',
+    name: 'Dinesh R',
+    phone: '+91 98765 43212',
+    email: 'dinesh.dp@milkqueen.com',
+    location: 'Coimbatore (East / Peelamedu)',
+    vehicleType: 'Bike',
+    vehicleModel: 'Bajaj Pulsar 150',
+    vehicleNumber: 'TN 37 EF 9012',
+    licenseNumber: 'TN-37-20210009981',
+    totalDeliveries: 398,
+    rating: 4.7,
+    status: 'Active',
+    joinedDate: '20 Jan 2026',
+    todayDeliveries: 6,
+    todayEarnings: 520,
+    avatar: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=400&q=80',
+    documents: {
+      drivingLicense: { name: 'Driving_License_Dinesh.pdf', verified: true },
+      rcBook: { name: 'RC_Pulsar_TN37EF9012.pdf', verified: true },
+      aadhaar: { name: 'Aadhaar_Dinesh.pdf', verified: true },
+      bankPassbook: { name: 'Indian_Bank_Dinesh.pdf', verified: true }
+    }
+  },
+  {
+    id: 'dp-4',
+    code: 'DP-004',
+    name: 'Prakash M',
+    phone: '+91 98765 43213',
+    email: 'prakash.dp@milkqueen.com',
+    location: 'Tiruppur Road, Coimbatore',
+    vehicleType: 'Scooter',
+    vehicleModel: 'TVS Jupiter 125',
+    vehicleNumber: 'TN 39 GH 3456',
+    licenseNumber: 'TN-39-20230001289',
+    totalDeliveries: 356,
+    rating: 4.8,
+    status: 'Active',
+    joinedDate: '01 Feb 2026',
+    todayDeliveries: 7,
+    todayEarnings: 590,
+    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80',
+    documents: {
+      drivingLicense: { name: 'Driving_License_Prakash.pdf', verified: true },
+      rcBook: { name: 'RC_Jupiter_TN39GH3456.pdf', verified: true },
+      aadhaar: { name: 'Aadhaar_Prakash.pdf', verified: true },
+      bankPassbook: { name: 'HDFC_Passbook_Prakash.pdf', verified: true }
+    }
+  },
+  {
+    id: 'dp-5',
+    code: 'DP-005',
+    name: 'Muthuvel K',
+    phone: '+91 97890 12345',
+    email: 'muthuvel.rider@gmail.com',
+    location: 'Coimbatore (South / Singanallur)',
+    vehicleType: 'Electric Scooter',
+    vehicleModel: 'Ather 450X',
+    vehicleNumber: 'TN 37 EV 8899',
+    licenseNumber: 'TN-37-20240003310',
+    totalDeliveries: 0,
+    rating: 5.0,
+    status: 'Pending', // Pending admin approval
+    joinedDate: '20 Nov 2026',
+    todayDeliveries: 0,
+    todayEarnings: 0,
+    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80',
+    documents: {
+      drivingLicense: { name: 'Driving_License_Muthuvel.pdf', verified: false },
+      rcBook: { name: 'RC_Ather_TN37EV8899.pdf', verified: false },
+      aadhaar: { name: 'Aadhaar_Card_Muthuvel.pdf', verified: false },
+      bankPassbook: { name: 'SBI_Passbook_Muthuvel.pdf', verified: false }
+    }
+  }
+];
