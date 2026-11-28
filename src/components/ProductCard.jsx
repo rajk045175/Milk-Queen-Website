@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Star, Heart, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { handleProductImageError } from '../data/products';
 
 export default function ProductCard({ product }) {
   const { cartItems, addToCart, updateQuantity, wishlist, toggleWishlist } = useCart();
@@ -33,6 +34,7 @@ export default function ProductCard({ product }) {
           <img
             src={product.image}
             alt={product.name}
+            onError={handleProductImageError}
             className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
             loading="lazy"
           />

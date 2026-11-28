@@ -13,7 +13,6 @@ export default function ProtectedRoute({ children, allowedRoles }) {
   if (allowedRoles && !allowedRoles.includes(currentUser.role)) {
     // If logged in under another role, redirect to their home dashboard
     if (currentUser.role === 'admin') return <Navigate to="/admin/dashboard" replace />;
-    if (currentUser.role === 'farmer') return <Navigate to="/farmer/dashboard" replace />;
     if (currentUser.role === 'delivery') return <Navigate to="/delivery/dashboard" replace />;
     return <Navigate to="/" replace />;
   }

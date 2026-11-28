@@ -26,10 +26,10 @@ export default function AboutUs() {
               Explore Products
             </Link>
             <Link
-              to="/farmers"
+              to="/subscription"
               className="bg-white border border-gray-200 text-gray-800 hover:bg-gray-50 px-6 py-3 rounded-full font-bold text-xs transition"
             >
-              Meet Our Farmers
+              Daily Subscriptions
             </Link>
           </div>
         </div>

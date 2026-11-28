@@ -1,40 +1,53 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { initialProducts, isCheeseProduct, parseValidPrice, parseValidQuantity } from '../data/products';
 
 const CartContext = createContext();
+
+const localImageById = Object.fromEntries(initialProducts.map(p => [p.id, p.image]));
+const productById = Object.fromEntries(initialProducts.map(p => [p.id, p]));
+
+const sanitizeCartItems = (items) => {
+  if (!Array.isArray(items)) return [];
+  return items
+    .filter(item => item && !isCheeseProduct(item))
+    .map(item => {
+      const catalogItem = productById[item.id];
+      return {
+        ...item,
+        image: localImageById[item.id] || item.image || catalogItem?.image,
+        price: parseValidPrice(item.price ?? catalogItem?.price),
+        quantity: parseValidQuantity(item.quantity ?? item.qty, 1)
+      };
+    });
+};
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(() => {
     const saved = localStorage.getItem('dc_cart_items');
-    return saved ? JSON.parse(saved) : [
+    return saved ? sanitizeCartItems(JSON.parse(saved)) : [
       {
         id: 'prod-1',
         name: 'Fresh Cow Milk',
-        farmerName: 'Ramasamy Farm',
-        farmerId: 'farmer-1',
         unit: '500 ml',
         price: 28,
         quantity: 1,
-        image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80'
+        image: '/images/products/fresh-cow-milk.jpg'
       },
       {
         id: 'prod-4',
         name: 'Fresh Paneer',
-        farmerName: 'Kovai Fresh Dairy',
-        farmerId: 'farmer-2',
         unit: '200 g',
         price: 120,
         quantity: 1,
-        image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=400&q=80'
+        image: '/images/products/fresh-paneer.jpg'
       },
       {
         id: 'prod-5',
         name: 'Fresh Curd',
-        farmerName: 'Anbu Dairy Farm',
-        farmerId: 'farmer-4',
         unit: '200 g',
         price: 40,
         quantity: 1,
-        image: 'https://images.unsplash.com/photo-1571212515416-fef01fc43637?auto=format&fit=crop&w=400&q=80'
+        image: '/images/products/fresh-curd.jpg'
       }
     ];
   });
@@ -55,27 +68,28 @@ export const CartProvider = ({ children }) => {
   }, [wishlist]);
 
   const addToCart = (product, qty = 1, sizeOption = null) => {
+    const validPrice = parseValidPrice(sizeOption ? sizeOption.price : product?.price);
+    if (validPrice === null) return;
+    const validQty = parseValidQuantity(qty, 1);
+
     setCartItems(prev => {
       const existing = prev.find(item => item.id === product.id);
-      const price = sizeOption ? sizeOption.price : product.price;
       const unit = sizeOption ? sizeOption.size : product.unit;
 
       if (existing) {
         return prev.map(item =>
           item.id === product.id
-            ? { ...item, quantity: item.quantity + qty }
+            ? { ...item, price: validPrice, unit, quantity: parseValidQuantity(item.quantity, 1) + validQty }
             : item
         );
       }
       return [...prev, {
         id: product.id,
         name: product.name,
-        price,
+        price: validPrice,
         unit,
         image: product.image,
-        farmerName: product.farmerName,
-        farmerId: product.farmerId,
-        quantity: qty
+        quantity: validQty
       }];
     });
   };
@@ -130,12 +144,15 @@ export const CartProvider = ({ children }) => {
   };
 
   // Calculations
-  const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const hasInvalidPrice = cartItems.some(item => parseValidPrice(item.price) === null);
+  const subtotal = hasInvalidPrice
+    ? null
+    : cartItems.reduce((acc, item) => acc + (parseValidPrice(item.price) * parseValidQuantity(item.quantity, 1)), 0);
   
-  let deliveryCharge = subtotal > 499 || subtotal === 0 ? 0 : 20;
+  let deliveryCharge = subtotal === null || subtotal > 499 || subtotal === 0 ? 0 : 20;
   let discount = 0;
 
-  if (appliedCoupon) {
+  if (appliedCoupon && subtotal !== null) {
     if (appliedCoupon.type === 'percent') {
       discount = Math.round(subtotal * appliedCoupon.value);
     } else if (appliedCoupon.type === 'flat') {
@@ -145,13 +162,14 @@ export const CartProvider = ({ children }) => {
     }
   }
 
-  const platformFee = subtotal > 0 ? 5 : 0;
-  const grandTotal = Math.max(0, subtotal + deliveryCharge + platformFee - discount);
-  const totalItemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const platformFee = subtotal !== null && subtotal > 0 ? 5 : 0;
+  const grandTotal = subtotal === null ? null : Math.max(0, subtotal + deliveryCharge + platformFee - discount);
+  const totalItemCount = cartItems.reduce((acc, item) => acc + parseValidQuantity(item.quantity, 1), 0);
 
   return (
     <CartContext.Provider value={{
       cartItems,
+      hasInvalidPrice,
       addToCart,
       updateQuantity,
       removeFromCart,

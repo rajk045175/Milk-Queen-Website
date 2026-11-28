@@ -12,34 +12,32 @@ import {
   Award,
   CalendarCheck,
   ChevronRight,
-  Star,
-  CheckCircle2,
   X
 } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
 import { useApp } from '../../context/AppContext';
-import { productCategories } from '../../data/products';
+import { productCategories, handleProductImageError } from '../../data/products';
 
 export default function Home() {
-  const { approvedProducts, farmers } = useApp();
+  const { approvedProducts } = useApp();
   const [videoModalOpen, setVideoModalOpen] = useState(false);
 
   // Take top featured products
   const featuredProducts = approvedProducts.slice(0, 8);
 
   const categoryImages = {
-    'Fresh Milk': 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80',
-    'Paneer': 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=400&q=80',
-    'Curd': 'https://images.unsplash.com/photo-1571212515416-fef01fc43637?auto=format&fit=crop&w=400&q=80',
-    'Ghee': 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=400&q=80',
-    'Butter': 'https://images.unsplash.com/photo-1589985270725-b873d6b1d4ef?auto=format&fit=crop&w=400&q=80',
-    'Other Products': 'https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=400&q=80'
+    'Fresh Milk': '/images/products/fresh-cow-milk.jpg',
+    'Paneer': '/images/products/fresh-paneer.jpg',
+    'Curd': '/images/products/fresh-curd.jpg',
+    'Ghee': '/images/products/pure-cow-ghee.jpg',
+    'Butter': '/images/products/fresh-butter.jpg',
+    'Other Products': '/images/products/strawberry-milk.jpg'
   };
 
   return (
     <div className="space-y-16 pb-16">
       
-      {/* 1. HERO SECTION (Matches Page 1 in Komagan PDF) */}
+      {/* 1. HERO SECTION */}
       <section className="relative overflow-hidden bg-gradient-to-b from-[#EAF5EC] via-[#F3FAF5] to-[#F8F7EF] pt-10 pb-16 md:py-20 border-b border-green-100">
         
         {/* Decorative soft green blurs */}
@@ -98,7 +96,7 @@ export default function Home() {
 
             </div>
 
-            {/* Right Hero Image Card (Matches Komagan PDF Hero Composition) */}
+            {/* Right Hero Image Card */}
             <div className="lg:col-span-5 relative">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-white group">
                 <img
@@ -178,7 +176,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. PRODUCT CATEGORIES (Matches Page 1 in Komagan PDF) */}
+      {/* 2. PRODUCT CATEGORIES */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -216,6 +214,7 @@ export default function Home() {
                 <img
                   src={cat.img}
                   alt={cat.name}
+                  onError={handleProductImageError}
                   className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                 />
               </div>
@@ -245,7 +244,7 @@ export default function Home() {
                 <Users className="w-6 h-6" />
               </div>
               <h3 className="text-3xl font-extrabold text-[#064E32] font-display">500+</h3>
-              <p className="text-xs font-semibold text-gray-600">Registered Local Farmers</p>
+              <p className="text-xs font-semibold text-gray-600">Partner Dairy Farmers</p>
             </div>
 
             <div className="space-y-1">
@@ -291,7 +290,7 @@ export default function Home() {
             to="/products"
             className="flex items-center space-x-1 text-sm font-bold text-[#146B3A] hover:text-[#064E32] transition"
           >
-            <span>See All 15 Products</span>
+            <span>See All Products</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -326,71 +325,13 @@ export default function Home() {
                 Start Daily Subscription
               </Link>
               <Link
-                to="/farmers"
+                to="/products"
                 className="bg-transparent border border-white/60 hover:bg-white/10 text-white px-6 py-3 rounded-full font-bold text-sm transition"
               >
-                Meet the Dairy Farmers
+                Browse All Products
               </Link>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* 6. OUR TRUSTED FARMERS PREVIEW */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 font-display">
-              Meet Our Partner Farmers
-            </h2>
-            <p className="text-sm text-gray-500 mt-1">
-              Transparent source. Know the exact family and farm feeding your loved ones.
-            </p>
-          </div>
-          <Link
-            to="/farmers"
-            className="flex items-center space-x-1 text-sm font-bold text-[#146B3A] hover:text-[#064E32] transition"
-          >
-            <span>View All Farmers</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {farmers.slice(0, 3).map((farmer) => (
-            <div key={farmer.id} className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm p-5 space-y-4">
-              <div className="flex items-center space-x-3.5">
-                <img
-                  src={farmer.avatar}
-                  alt={farmer.name}
-                  className="w-14 h-14 rounded-full object-cover border-2 border-emerald-400"
-                />
-                <div>
-                  <div className="flex items-center space-x-1.5">
-                    <h4 className="font-bold text-gray-900 text-base">{farmer.farmName}</h4>
-                    <CheckCircle2 className="w-4 h-4 text-[#146B3A]" />
-                  </div>
-                  <p className="text-xs text-gray-500">{farmer.location}</p>
-                  <div className="flex items-center space-x-1 text-amber-500 text-xs font-bold mt-0.5">
-                    <Star className="w-3.5 h-3.5 fill-amber-400" />
-                    <span>{farmer.rating} ({farmer.reviewsCount} reviews)</span>
-                  </div>
-                </div>
-              </div>
-              <p className="text-xs text-gray-600 line-clamp-3 leading-relaxed">
-                "{farmer.story}"
-              </p>
-              <div className="pt-2 border-t border-gray-100 flex items-center justify-between text-xs">
-                <span className="text-gray-400">Total Supply: <strong className="text-gray-700">{farmer.totalSupplied}</strong></span>
-                <Link
-                  to={`/products?farmer=${encodeURIComponent(farmer.farmName)}`}
-                  className="text-[#146B3A] font-bold hover:underline"
-                >
-                  View Products →
-                </Link>
-              </div>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -408,7 +349,7 @@ export default function Home() {
               <div className="w-16 h-16 rounded-full bg-[#146B3A] flex items-center justify-center mb-4 animate-pulse">
                 <Play className="w-8 h-8 fill-white ml-1" />
               </div>
-              <h3 className="text-xl font-bold font-display">DairyConnect – Our Journey with 500+ Farmers</h3>
+              <h3 className="text-xl font-bold font-display">Milk Queen – Our Journey with 500+ Farmers</h3>
               <p className="text-xs text-green-200 mt-2 max-w-md">
                 Demonstrating our direct farm-to-table supply chain in Coimbatore, milk testing labs, and 6:00 AM delivery fleet.
               </p>

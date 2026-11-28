@@ -15,10 +15,12 @@ import {
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
+import { handleProductImageError, parseValidPrice, parseValidQuantity } from '../../data/products';
 
 export default function Cart() {
   const {
     cartItems,
+    hasInvalidPrice,
     updateQuantity,
     removeFromCart,
     clearCart,
@@ -101,7 +103,10 @@ export default function Cart() {
         {/* Left Cart Items List (7 cols) */}
         <div className="lg:col-span-7 space-y-4">
           <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm divide-y divide-gray-100">
-            {cartItems.map((item) => (
+            {cartItems.map((item) => {
+              const unitPrice = parseValidPrice(item.price);
+              const qty = parseValidQuantity(item.quantity, 1);
+              return (
               <div key={item.id} className="py-4 first:pt-0 last:pb-0 flex items-center justify-between gap-4">
                 
                 {/* Item Thumbnail & Details */}
@@ -109,12 +114,15 @@ export default function Cart() {
                   <img
                     src={item.image}
                     alt={item.name}
+                    onError={handleProductImageError}
                     className="w-16 h-16 rounded-2xl object-cover bg-stone-100 border border-gray-100 shrink-0"
                   />
                   <div>
                     <h4 className="font-bold text-gray-900 text-sm leading-tight">{item.name}</h4>
                     <p className="text-xs text-gray-400 mt-0.5">{item.unit} • {item.farmerName}</p>
-                    <p className="text-sm font-extrabold text-[#146B3A] mt-1 font-display">₹{item.price}</p>
+                    <p className={`text-sm font-extrabold mt-1 font-display ${unitPrice !== null ? 'text-[#146B3A]' : 'text-rose-600'}`}>
+                      {unitPrice !== null ? `₹${unitPrice}` : 'Invalid price'}
+                    </p>
                   </div>
                 </div>
 
@@ -128,7 +136,7 @@ export default function Cart() {
                     >
                       <Minus className="w-3 h-3" />
                     </button>
-                    <span className="text-xs font-bold w-4 text-center">{item.quantity}</span>
+                    <span className="text-xs font-bold w-4 text-center">{qty}</span>
                     <button
                       onClick={() => updateQuantity(item.id, 1)}
                       className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-gray-700 hover:bg-gray-200 transition"
@@ -139,7 +147,7 @@ export default function Cart() {
                   </div>
 
                   <span className="text-sm font-extrabold text-gray-900 w-16 text-right font-display">
-                    ₹{item.price * item.quantity}
+                    {unitPrice !== null ? `₹${unitPrice * qty}` : '—'}
                   </span>
 
                   <button
@@ -152,7 +160,8 @@ export default function Cart() {
                 </div>
 
               </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Delivery Note */}
@@ -174,11 +183,17 @@ export default function Cart() {
               Order Summary
             </h3>
 
+            {hasInvalidPrice && (
+              <div className="bg-rose-50 border border-rose-200 text-rose-800 rounded-xl p-3 text-xs font-semibold">
+                One or more items have an invalid price. Please remove them before proceeding.
+              </div>
+            )}
+
             {/* Price breakdown */}
             <div className="space-y-3 text-xs text-gray-600">
               <div className="flex items-center justify-between">
                 <span>Items Subtotal</span>
-                <span className="font-bold text-gray-900 text-sm">₹{subtotal}</span>
+                <span className="font-bold text-gray-900 text-sm">{subtotal !== null ? `₹${subtotal}` : '—'}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span>Delivery Charges</span>
@@ -200,7 +215,7 @@ export default function Cart() {
 
               <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-base font-extrabold text-gray-900">
                 <span className="font-display">Total Amount</span>
-                <span className="text-xl text-[#146B3A] font-display">₹{grandTotal}</span>
+                <span className="text-xl text-[#146B3A] font-display">{grandTotal !== null ? `₹${grandTotal}` : '—'}</span>
               </div>
             </div>
 

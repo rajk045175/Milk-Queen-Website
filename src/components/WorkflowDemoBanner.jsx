@@ -16,12 +16,12 @@ export default function WorkflowDemoBanner() {
   const [activeWorkflowId, setActiveWorkflowId] = useState(null);
 
   const steps = [
-    { num: 1, title: 'Farmer Adds Product', actor: 'farmer', roleTitle: 'Farmer (Ramasamy)' },
+    { num: 1, title: 'Admin Adds Product', actor: 'admin', roleTitle: 'Admin' },
     { num: 2, title: 'Admin Approves Product', actor: 'admin', roleTitle: 'Admin' },
     { num: 3, title: 'Product Live in Catalog', actor: 'customer', roleTitle: 'Customer Catalog' },
     { num: 4, title: 'Customer Places Order', actor: 'customer', roleTitle: 'Customer (Priya S)' },
-    { num: 5, title: 'Order in Farmer Dashboard', actor: 'farmer', roleTitle: 'Farmer (Ramasamy)' },
-    { num: 6, title: 'Farmer Prepares Order', actor: 'farmer', roleTitle: 'Farmer (Ramasamy)' },
+    { num: 5, title: 'Admin Reviews Order', actor: 'admin', roleTitle: 'Admin' },
+    { num: 6, title: 'Order Marked Packed', actor: 'admin', roleTitle: 'Admin' },
     { num: 7, title: 'Admin Assigns Delivery', actor: 'admin', roleTitle: 'Admin' },
     { num: 8, title: 'Rider Receives Order', actor: 'delivery', roleTitle: 'Delivery (Karthik)' },
     { num: 9, title: 'Rider Updates Status', actor: 'delivery', roleTitle: 'Delivery (Karthik)' },
@@ -32,20 +32,18 @@ export default function WorkflowDemoBanner() {
     setCurrentStep(stepNumber);
 
     if (stepNumber === 1) {
-      // Step 1: Farmer adds new product
-      switchRole('farmer');
+      // Step 1: Admin adds new product
+      switchRole('admin');
       const newProd = addProduct({
         name: 'Traditional Bilona Buffalo Ghee',
         category: 'Ghee',
         unit: '250 g',
         price: 260,
         stock: 35,
-        farmerId: 'farmer-1',
-        farmerName: 'Ramasamy Farm',
         description: 'Cultured aromatic buffalo bilona ghee freshly churned this morning.'
       }, false);
       setActiveWorkflowId(newProd.id);
-      navigate('/farmer/products');
+      navigate('/admin/products');
     } else if (stepNumber === 2) {
       // Step 2: Admin approves product
       switchRole('admin');
@@ -67,13 +65,12 @@ export default function WorkflowDemoBanner() {
         customerPhone: '+91 98765 43210',
         deliveryAddress: '12, R.S. Puram Main Road, Coimbatore - 641002',
         deliverySlot: 'Today, 10:00 AM - 12:00 PM',
-        paymentMethod: 'UPI',
+        paymentMethod: 'UPI - Google Pay',
+        paymentStatus: 'Pending',
         items: [
           {
             id: 'prod-1',
             name: 'Fresh Cow Milk',
-            farmerName: 'Ramasamy Farm',
-            farmerId: 'farmer-1',
             unit: '500 ml',
             price: 28,
             quantity: 2,
@@ -82,8 +79,6 @@ export default function WorkflowDemoBanner() {
           {
             id: 'prod-4',
             name: 'Fresh Paneer',
-            farmerName: 'Kovai Fresh Dairy',
-            farmerId: 'farmer-2',
             unit: '200 g',
             price: 120,
             quantity: 1,
@@ -98,13 +93,13 @@ export default function WorkflowDemoBanner() {
       setActiveWorkflowId(order.id);
       navigate(`/tracking/${order.id}`);
     } else if (stepNumber === 5 || stepNumber === 6) {
-      // Step 5 & 6: Farmer accepts & prepares
-      switchRole('farmer');
+      // Step 5 & 6: Admin accepts & packs
+      switchRole('admin');
       const targetOrder = orders[0];
       if (targetOrder) {
         updateOrderStatus(targetOrder.id, 'Packed');
       }
-      navigate('/farmer/orders');
+      navigate('/admin/orders');
     } else if (stepNumber === 7) {
       // Step 7: Admin assigns delivery partner
       switchRole('admin');
@@ -146,7 +141,7 @@ export default function WorkflowDemoBanner() {
             <div className="flex items-center space-x-2">
               <Sparkles className="w-4 h-4 text-emerald-300" />
               <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider">4-Module Connection Tour</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wider">3-Module Connection Tour</h4>
                 <p className="text-[10px] text-green-200">Test the complete 10-step lifecycle</p>
               </div>
             </div>
@@ -199,7 +194,7 @@ export default function WorkflowDemoBanner() {
               <RefreshCw className="w-3 h-3" />
               <span>Reset Data</span>
             </button>
-            <span className="text-[10px] text-gray-400">All 4 roles synced in real-time</span>
+            <span className="text-[10px] text-gray-400">All 3 roles synced in real-time</span>
           </div>
         </div>
       )}

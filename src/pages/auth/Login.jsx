@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Sparkles, User, ShieldCheck, Tractor, Bike, ArrowRight, Lock, Mail } from 'lucide-react';
+import { Sparkles, User, ShieldCheck, Bike, ArrowRight, Lock, Mail } from 'lucide-react';
 import { useAuth, demoAccounts } from '../../context/AuthContext';
 
 export default function Login() {
@@ -20,7 +20,6 @@ export default function Login() {
     e.preventDefault();
     const user = login(role);
     if (user.role === 'admin') navigate('/admin/dashboard');
-    else if (user.role === 'farmer') navigate('/farmer/dashboard');
     else if (user.role === 'delivery') navigate('/delivery/dashboard');
     else navigate('/');
   };
@@ -28,7 +27,6 @@ export default function Login() {
   const handleQuickLogin = (roleKey) => {
     const user = login(roleKey);
     if (user.role === 'admin') navigate('/admin/dashboard');
-    else if (user.role === 'farmer') navigate('/farmer/dashboard');
     else if (user.role === 'delivery') navigate('/delivery/dashboard');
     else navigate('/');
   };
@@ -55,15 +53,14 @@ export default function Login() {
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-lg px-4">
         <div className="bg-white py-8 px-6 sm:px-10 rounded-3xl shadow-xl border border-gray-100 space-y-6">
           
-          {/* 4 Roles Selector Buttons */}
+          {/* 3 Roles Selector Buttons */}
           <div className="space-y-2">
             <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block text-center">
               Choose Portal Role
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               {[
                 { id: 'customer', label: 'Customer', icon: User },
-                { id: 'farmer', label: 'Farmer', icon: Tractor },
                 { id: 'admin', label: 'Admin', icon: ShieldCheck },
                 { id: 'delivery', label: 'Delivery', icon: Bike }
               ].map((item) => {
@@ -132,20 +129,13 @@ export default function Login() {
             <span className="text-[11px] font-bold uppercase text-gray-400 block text-center">
               ⚡ Instant 1-Click Demo Login
             </span>
-            <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="grid grid-cols-3 gap-2 text-xs">
               <button
                 type="button"
                 onClick={() => handleQuickLogin('customer')}
                 className="p-2.5 rounded-xl bg-gray-50 hover:bg-emerald-50 text-gray-800 hover:text-[#146B3A] font-bold border border-gray-200 transition text-left flex items-center space-x-2"
               >
                 <span>👤 Customer</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('farmer')}
-                className="p-2.5 rounded-xl bg-gray-50 hover:bg-emerald-50 text-gray-800 hover:text-[#146B3A] font-bold border border-gray-200 transition text-left flex items-center space-x-2"
-              >
-                <span>👨‍🌾 Farmer</span>
               </button>
               <button
                 type="button"
@@ -164,15 +154,10 @@ export default function Login() {
             </div>
           </div>
 
-          {/* New Farmer Application Highlight */}
-          <div className="pt-3 border-t border-gray-100 text-center space-y-2">
-            <p className="text-xs text-gray-600">Are you a dairy farmer?</p>
-            <Link
-              to="/farmer-register"
-              className="inline-flex items-center space-x-1.5 text-xs font-bold text-[#146B3A] bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-200 hover:bg-emerald-100 transition"
-            >
-              <Tractor className="w-4 h-4" />
-              <span>Apply for Farmer Partnership & Upload Documents</span>
+          <div className="text-center text-xs text-gray-500 pt-2">
+            New customer?{' '}
+            <Link to="/register" className="text-[#146B3A] font-bold hover:underline">
+              Create Account
             </Link>
           </div>
 

@@ -2,12 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   Users,
-  UserCheck,
+  Bike,
   Package,
   ShoppingBag,
   CircleDollarSign,
   TrendingUp,
-  Bike,
   Plus,
   ArrowRight,
   CheckCircle2,
@@ -17,12 +16,12 @@ import {
 import { useApp } from '../../context/AppContext';
 
 export default function AdminDashboard() {
-  const { customers, farmers, products, orders, deliveryPartners, pendingProducts } = useApp();
+  const { customers, products, orders, deliveryPartners, pendingProducts } = useApp();
 
   return (
     <div className="space-y-8">
       
-      {/* 1. Header & Welcome (Matches Page 9 & 17 in PDF) */}
+      {/* 1. Header & Welcome */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <span className="text-xs font-semibold text-[#146B3A] uppercase tracking-wider">Enterprise Overview</span>
@@ -52,15 +51,15 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Pending Product Approval Alert (STEP 2 in Workflow) */}
+      {/* Pending Product Approval Alert */}
       {pendingProducts.length > 0 && (
         <div className="bg-amber-50 border border-amber-300 rounded-2xl p-4 flex items-center justify-between shadow-sm animate-pulse">
           <div className="flex items-center space-x-3 text-xs">
             <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
             <div>
-              <strong className="text-amber-900 block">STEP 2 of Workflow: Farmer Product Awaiting Approval!</strong>
+              <strong className="text-amber-900 block">Products Awaiting Approval!</strong>
               <span className="text-amber-800">
-                {pendingProducts.length} new product(s) submitted by farmers are waiting for your approval.
+                {pendingProducts.length} new product(s) are waiting for your review and approval.
               </span>
             </div>
           </div>
@@ -73,7 +72,7 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* 2. Top 5 Key Statistics Cards (Matches Page 9 & 17) */}
+      {/* 2. Top 5 Key Statistics Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         
         <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm space-y-1">
@@ -90,13 +89,13 @@ export default function AdminDashboard() {
 
         <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm space-y-1">
           <div className="flex items-center justify-between text-gray-400">
-            <span className="text-xs font-semibold">Total Farmers</span>
-            <UserCheck className="w-4 h-4 text-emerald-600" />
+            <span className="text-xs font-semibold">Delivery Partners</span>
+            <Bike className="w-4 h-4 text-emerald-600" />
           </div>
-          <h3 className="text-2xl font-extrabold text-gray-900 font-display">86</h3>
+          <h3 className="text-2xl font-extrabold text-gray-900 font-display">{deliveryPartners?.length || 12}</h3>
           <span className="text-[11px] font-bold text-emerald-600 flex items-center space-x-1">
             <TrendingUp className="w-3 h-3" />
-            <span>+8% registered</span>
+            <span>+3 this month</span>
           </span>
         </div>
 
@@ -138,7 +137,7 @@ export default function AdminDashboard() {
 
       </div>
 
-      {/* 3. Sales Overview & Status Breakdown Charts (Matches Page 17) */}
+      {/* 3. Sales Overview & Status Breakdown Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* Sales Overview Line Curve (7 cols) */}
@@ -180,7 +179,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Orders by Status (5 cols - Matches Page 17) */}
+        {/* Orders by Status (5 cols) */}
         <div className="lg:col-span-5 bg-white rounded-3xl p-6 border border-gray-100 shadow-sm space-y-4 flex flex-col justify-between">
           <div>
             <h3 className="font-bold text-gray-900 text-base font-display">Orders by Status</h3>
@@ -228,37 +227,43 @@ export default function AdminDashboard() {
 
       </div>
 
-      {/* 4. Top Performing Farmers & Top Products (Matches Page 17) */}
+      {/* 4. Recent Orders & Top Products */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
-        {/* Top Farmers */}
+        {/* Recent Orders */}
         <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-gray-100">
-            <h3 className="font-bold text-gray-900 text-sm font-display">Top Performing Farmers</h3>
-            <Link to="/admin/farmers" className="text-xs text-[#146B3A] font-bold hover:underline">
-              View All 86 →
+            <h3 className="font-bold text-gray-900 text-sm font-display">Recent Orders</h3>
+            <Link to="/admin/orders" className="text-xs text-[#146B3A] font-bold hover:underline">
+              View All →
             </Link>
           </div>
 
           <div className="space-y-3">
-            {farmers.slice(0, 4).map((f, idx) => (
-              <div key={f.id} className="flex items-center justify-between text-xs p-2.5 rounded-xl hover:bg-gray-50">
+            {orders.slice(0, 4).map((o, idx) => (
+              <div key={o.id} className="flex items-center justify-between text-xs p-2.5 rounded-xl hover:bg-gray-50">
                 <div className="flex items-center space-x-3">
                   <span className="w-5 h-5 rounded-full bg-gray-100 text-gray-700 font-bold flex items-center justify-center text-[10px]">
                     {idx + 1}
                   </span>
-                  <img src={f.avatar} alt={f.name} className="w-10 h-10 rounded-full object-cover border" />
                   <div>
-                    <h5 className="font-bold text-gray-900">{f.farmName}</h5>
-                    <p className="text-gray-400 text-[11px]">{f.location}</p>
+                    <h5 className="font-bold text-gray-900">{o.customerName}</h5>
+                    <p className="text-gray-400 text-[11px]">#{o.id?.slice(-6)} · {o.items?.length} items</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="font-bold text-emerald-800">{f.totalSupplied}</span>
-                  <span className="text-[10px] text-gray-400 block">Supplied</span>
+                  <span className="font-bold text-emerald-800">₹{o.grandTotal}</span>
+                  <span className={`text-[10px] block px-1.5 py-0.5 rounded-full font-semibold mt-0.5 ${
+                    o.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700' :
+                    o.status === 'Cancelled' ? 'bg-rose-50 text-rose-700' :
+                    'bg-amber-50 text-amber-700'
+                  }`}>{o.status}</span>
                 </div>
               </div>
             ))}
+            {orders.length === 0 && (
+              <p className="text-xs text-gray-400 text-center py-4">No orders yet.</p>
+            )}
           </div>
         </div>
 

@@ -17,18 +17,16 @@ import { useApp } from '../../context/AppContext';
 import { productCategories } from '../../data/products';
 
 export default function Products() {
-  const { approvedProducts, farmers } = useApp();
+  const { approvedProducts } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // URL state params
   const initialCategory = searchParams.get('category') || 'all';
   const initialSearch = searchParams.get('search') || '';
-  const initialFarmer = searchParams.get('farmer') || '';
 
   // Local filter states
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [searchQuery, setSearchQuery] = useState(initialSearch);
-  const [selectedFarmer, setSelectedFarmer] = useState(initialFarmer);
   const [selectedProductType, setSelectedProductType] = useState('all');
   const [maxPrice, setMaxPrice] = useState(600);
   const [sortBy, setSortBy] = useState('popularity');
@@ -39,7 +37,6 @@ export default function Products() {
   React.useEffect(() => {
     if (searchParams.get('category')) setSelectedCategory(searchParams.get('category'));
     if (searchParams.get('search')) setSearchQuery(searchParams.get('search'));
-    if (searchParams.get('farmer')) setSelectedFarmer(searchParams.get('farmer'));
   }, [searchParams]);
 
   // Filtered & Sorted products computation
@@ -59,13 +56,7 @@ export default function Products() {
         const q = searchQuery.toLowerCase().trim();
         const matchesName = product.name.toLowerCase().includes(q);
         const matchesCat = product.category.toLowerCase().includes(q);
-        const matchesFarmer = product.farmerName.toLowerCase().includes(q);
-        if (!matchesName && !matchesCat && !matchesFarmer) return false;
-      }
-
-      // Farmer filter
-      if (selectedFarmer && product.farmerName.toLowerCase() !== selectedFarmer.toLowerCase()) {
-        return false;
+        if (!matchesName && !matchesCat) return false;
       }
 
       // Product Type filter (Organic, A2 Milk, Regular)
@@ -88,12 +79,11 @@ export default function Products() {
       // Default: popularity
       return b.reviewsCount - a.reviewsCount;
     });
-  }, [approvedProducts, selectedCategory, searchQuery, selectedFarmer, selectedProductType, maxPrice, sortBy]);
+  }, [approvedProducts, selectedCategory, searchQuery, selectedProductType, maxPrice, sortBy]);
 
   const resetFilters = () => {
     setSelectedCategory('all');
     setSearchQuery('');
-    setSelectedFarmer('');
     setSelectedProductType('all');
     setMaxPrice(600);
     setSortBy('popularity');
@@ -197,33 +187,6 @@ export default function Products() {
               </div>
             </div>
 
-            {/* Farmers Filter */}
-            <div className="space-y-3 pt-3 border-t border-gray-100">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">Farmers</h4>
-              <div className="space-y-2 text-xs">
-                {farmers.slice(0, 4).map((f) => (
-                  <label key={f.id} className="flex items-center space-x-2 text-gray-700 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="farmerFilter"
-                      checked={selectedFarmer === f.farmName}
-                      onChange={() => setSelectedFarmer(selectedFarmer === f.farmName ? '' : f.farmName)}
-                      className="accent-[#146B3A]"
-                    />
-                    <span className="truncate">{f.farmName}</span>
-                  </label>
-                ))}
-                {selectedFarmer && (
-                  <button
-                    onClick={() => setSelectedFarmer('')}
-                    className="text-[11px] text-rose-600 hover:underline pt-1 block"
-                  >
-                    Clear Farmer Filter
-                  </button>
-                )}
-              </div>
-            </div>
-
             {/* Product Type Filter */}
             <div className="space-y-3 pt-3 border-t border-gray-100">
               <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">Product Type</h4>
@@ -312,19 +275,13 @@ export default function Products() {
           </div>
 
           {/* Active Filter Tags */}
-          {(selectedCategory !== 'all' || selectedFarmer || searchQuery || selectedProductType !== 'all') && (
+          {(selectedCategory !== 'all' || searchQuery || selectedProductType !== 'all') && (
             <div className="flex flex-wrap items-center gap-2 text-xs">
               <span className="text-gray-400 font-semibold">Active:</span>
               {selectedCategory !== 'all' && (
                 <span className="inline-flex items-center space-x-1 bg-emerald-50 text-[#146B3A] px-2.5 py-1 rounded-full font-bold">
                   <span>Category: {selectedCategory}</span>
                   <X className="w-3 h-3 cursor-pointer" onClick={() => setSelectedCategory('all')} />
-                </span>
-              )}
-              {selectedFarmer && (
-                <span className="inline-flex items-center space-x-1 bg-emerald-50 text-[#146B3A] px-2.5 py-1 rounded-full font-bold">
-                  <span>Farmer: {selectedFarmer}</span>
-                  <X className="w-3 h-3 cursor-pointer" onClick={() => setSelectedFarmer('')} />
                 </span>
               )}
               {searchQuery && (

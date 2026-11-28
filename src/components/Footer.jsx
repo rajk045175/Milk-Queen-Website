@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Leaf, Heart, ShieldCheck, Truck, Instagram, Facebook, Youtube, Linkedin, ArrowRight, Tractor } from 'lucide-react';
+import { Leaf, Heart, ShieldCheck, Truck, Instagram, Facebook, Youtube, Linkedin, Phone, Mail } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -69,7 +69,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-xs text-green-100/80 max-w-sm leading-relaxed">
-              Empowering local dairy farmers and delivering unadulterated, farm-fresh milk, paneer, curd, and bilona ghee to happy families across Coimbatore and surrounding regions.
+              Delivering unadulterated, farm-fresh milk, paneer, curd, and bilona ghee to happy families across Coimbatore and surrounding regions.
             </p>
             <div className="flex items-center space-x-3 pt-2">
               <a href="#instagram" className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition">
@@ -92,16 +92,15 @@ export default function Footer() {
             <ul className="space-y-2 text-xs text-green-100/90">
               <li><Link to="/" className="hover:text-white transition">Home</Link></li>
               <li><Link to="/products" className="hover:text-white transition">Product Catalog</Link></li>
-              <li><Link to="/farmers" className="hover:text-white transition">Our Farmers</Link></li>
-              <li><Link to="/farmer-register" className="text-emerald-300 font-bold hover:text-white transition">Farmer Registration</Link></li>
               <li><Link to="/subscription" className="hover:text-white transition">Daily Milk Subscription</Link></li>
+              <li><Link to="/about" className="hover:text-white transition">About Us</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition">Contact Us</Link></li>
             </ul>
           </div>
 
           <div>
             <h5 className="font-bold text-xs uppercase tracking-wider text-emerald-300 mb-4">Portals</h5>
             <ul className="space-y-2 text-xs text-green-100/90">
-              <li><Link to="/farmer/dashboard" className="hover:text-white transition">Farmer Portal</Link></li>
               <li><Link to="/admin/dashboard" className="hover:text-white transition">Admin Dashboard</Link></li>
               <li><Link to="/delivery/dashboard" className="hover:text-white transition">Delivery Partner App</Link></li>
               <li><Link to="/orders" className="hover:text-white transition">Track Your Order</Link></li>
@@ -110,17 +109,26 @@ export default function Footer() {
           </div>
 
           <div>
-            <h5 className="font-bold text-xs uppercase tracking-wider text-emerald-300 mb-4">Farmer Partnership</h5>
-            <p className="text-xs text-green-200 mb-3 leading-relaxed">
-              Are you a local dairy farmer? Partner with Milk Queen for daily collection and weekly payouts.
-            </p>
-            <Link
-              to="/farmer-register"
-              className="inline-flex items-center space-x-1.5 bg-[#146B3A] hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow"
-            >
-              <Tractor className="w-4 h-4" />
-              <span>Register as Farmer</span>
-            </Link>
+            <h5 className="font-bold text-xs uppercase tracking-wider text-emerald-300 mb-4">Customer Support</h5>
+            <div className="space-y-3 text-xs text-green-100/90">
+              <p className="leading-relaxed">
+                Need help? Our support team is available 7 days a week, 6 AM – 9 PM.
+              </p>
+              <div className="flex items-center space-x-2">
+                <Phone className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
+                <span>+91 98765 43210</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Mail className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
+                <span>support@milkqueen.in</span>
+              </div>
+              <Link
+                to="/contact"
+                className="inline-flex items-center space-x-1.5 bg-[#146B3A] hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow mt-1"
+              >
+                <span>Get Support</span>
+              </Link>
+            </div>
           </div>
         </div>
 

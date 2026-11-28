@@ -45,7 +45,7 @@ export default function AdminLayout({ children }) {
             <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search farmers, customers, orders, products..."
+              placeholder="Search customers, orders, products..."
               value={globalSearch}
               onChange={(e) => setGlobalSearch(e.target.value)}
               className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#146B3A] focus:bg-white transition"
@@ -61,14 +61,12 @@ export default function AdminLayout({ children }) {
               onChange={(e) => {
                 switchRole(e.target.value);
                 if (e.target.value === 'customer') navigate('/');
-                if (e.target.value === 'farmer') navigate('/farmer/dashboard');
                 if (e.target.value === 'delivery') navigate('/delivery/dashboard');
               }}
               className="text-xs bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 font-semibold text-gray-700"
             >
               <option value="admin">Admin View</option>
               <option value="customer">Switch to Customer</option>
-              <option value="farmer">Switch to Farmer</option>
               <option value="delivery">Switch to Delivery</option>
             </select>
 

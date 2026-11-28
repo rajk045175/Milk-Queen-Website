@@ -18,15 +18,15 @@ import {
 import { useApp } from '../../context/AppContext';
 import { useCart } from '../../context/CartContext';
 import ProductCard from '../../components/ProductCard';
+import { handleProductImageError } from '../../data/products';
 
 export default function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { approvedProducts, farmers } = useApp();
+  const { approvedProducts } = useApp();
   const { addToCart, cartItems, wishlist, toggleWishlist } = useCart();
 
   const product = approvedProducts.find(p => p.id === id) || approvedProducts[0];
-  const farmer = farmers.find(f => f.farmName === product?.farmerName) || farmers[0];
 
   const [selectedSize, setSelectedSize] = useState(product?.sizes ? product.sizes[0] : { size: product?.unit, price: product?.price });
   const [qty, setQty] = useState(1);
@@ -84,6 +84,7 @@ export default function ProductDetails() {
             <img
               src={activeImage}
               alt={product.name}
+              onError={handleProductImageError}
               className="w-full h-full object-cover transition duration-500 group-hover:scale-105"
             />
             {product.badge && (
@@ -259,34 +260,32 @@ export default function ProductDetails() {
           </div>
         </div>
 
-        {/* Right Column: Farmer Story & Delivery Guarantees (3 cols - Matches Page 3) */}
+        {/* Right Column: Quality & Delivery Guarantees (3 cols) */}
         <div className="lg:col-span-3 space-y-6">
           
-          {/* Farmer Card */}
+          {/* Quality Assurance Card */}
           <div className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm space-y-4">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">Farmer Information</h4>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">Quality Assurance</h4>
             <div className="flex items-center space-x-3">
-              <img
-                src={farmer.avatar}
-                alt={farmer.name}
-                className="w-14 h-14 rounded-full object-cover border-2 border-emerald-400"
-              />
+              <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-[#146B3A] flex items-center justify-center shrink-0">
+                <Leaf className="w-6 h-6" />
+              </div>
               <div>
-                <h3 className="font-bold text-gray-900 text-base">{farmer.farmName}</h3>
-                <p className="text-xs text-gray-500">{farmer.location}</p>
+                <h3 className="font-bold text-gray-900 text-base">Milk Queen Certified</h3>
+                <p className="text-xs text-gray-500">24-Point Purity Tested</p>
                 <span className="inline-block mt-1 text-[10px] bg-emerald-100 text-[#146B3A] font-bold px-2 py-0.5 rounded-full">
-                  ★ {farmer.rating} (Verified Partner)
+                  100% Preservative Free
                 </span>
               </div>
             </div>
-            <p className="text-xs text-gray-600 leading-relaxed italic">
-              "{farmer.story}"
+            <p className="text-xs text-gray-600 leading-relaxed">
+              Chilled immediately after collection and delivered fresh to your doorstep in insulated cold-chain packs.
             </p>
             <Link
-              to={`/farmers`}
+              to="/products"
               className="block text-center w-full py-2 bg-gray-50 hover:bg-gray-100 text-[#146B3A] font-bold text-xs rounded-xl border border-gray-200 transition"
             >
-              View Farmer Profile →
+              Browse All Products →
             </Link>
           </div>
 

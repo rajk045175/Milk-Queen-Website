@@ -12,6 +12,7 @@ import {
   Filter
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { handleProductImageError } from '../../data/products';
 
 export default function AdminProducts() {
   const { products, approveProduct, rejectProduct, deleteProduct, updateProduct } = useApp();
@@ -105,7 +106,7 @@ export default function AdminProducts() {
               {filtered.map((p) => (
                 <tr key={p.id} className="hover:bg-gray-50/70 transition">
                   <td className="py-3.5 px-4 flex items-center space-x-3">
-                    <img src={p.image} alt={p.name} className="w-12 h-12 rounded-xl object-cover bg-stone-100" />
+                    <img src={p.image} alt={p.name} onError={handleProductImageError} className="w-12 h-12 rounded-xl object-cover bg-stone-100" />
                     <div>
                       <h4 className="font-bold text-gray-900">{p.name}</h4>
                       <p className="text-[10px] text-gray-400">{p.unit}</p>

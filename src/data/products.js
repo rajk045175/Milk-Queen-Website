@@ -1,3 +1,30 @@
+export const FALLBACK_PRODUCT_IMAGE = '/images/products/dairy-fallback.jpg';
+
+export const handleProductImageError = (e) => {
+  if (e.currentTarget.dataset.fallbackApplied) return;
+  e.currentTarget.dataset.fallbackApplied = 'true';
+  e.currentTarget.src = FALLBACK_PRODUCT_IMAGE;
+};
+
+export const isCheeseProduct = (item) => {
+  if (!item) return false;
+  const name = (item.name || '').toLowerCase();
+  const category = (item.category || '').toLowerCase();
+  // Keep Paneer (cottage cheese) and remove all actual cheese products/categories
+  if (name.includes('paneer') || category === 'paneer') return false;
+  return name.includes('cheese') || category.includes('cheese');
+};
+
+export const parseValidPrice = (value) => {
+  const num = Number(value);
+  return Number.isFinite(num) && num > 0 ? num : null;
+};
+
+export const parseValidQuantity = (value, fallback = 1) => {
+  const num = Math.floor(Number(value));
+  return Number.isFinite(num) && num >= 1 ? num : fallback;
+};
+
 export const initialProducts = [
   {
     id: 'prod-1',
@@ -13,10 +40,7 @@ export const initialProducts = [
     stock: 248,
     badge: 'Bestseller',
     productType: 'Regular',
-    farmerId: 'farmer-1',
-    farmerName: 'Ramasamy Farm',
-    farmLocation: 'Kovai, Coimbatore',
-    image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/fresh-cow-milk.jpg',
     description: 'Pure and fresh cow milk collected daily from our grass-fed cows in Coimbatore. No added preservatives, chemicals, or hormones. Rich in calcium and essential vitamins.',
     sizes: [
       { size: '500 ml', price: 28 },
@@ -40,10 +64,7 @@ export const initialProducts = [
     stock: 120,
     badge: 'A2 Milk',
     productType: 'A2 Milk',
-    farmerId: 'farmer-3',
-    farmerName: 'Marutham Organic',
-    farmLocation: 'Pollachi, Coimbatore',
-    image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/a2-cow-milk.jpg',
     description: 'Indigenous native breed A2 beta-casein cow milk. Easier on the stomach, promotes gut health and overall vitality.',
     sizes: [
       { size: '500 ml', price: 35 },
@@ -66,10 +87,7 @@ export const initialProducts = [
     stock: 95,
     badge: 'Farm Fresh',
     productType: 'Regular',
-    farmerId: 'farmer-2',
-    farmerName: 'Kovai Fresh Dairy',
-    farmLocation: 'Thondamuthur, Coimbatore',
-    image: 'https://images.unsplash.com/photo-1528750997573-59b89d56f4f7?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/fresh-buffalo-milk.jpg',
     description: 'Thick, creamy and rich buffalo milk with high fat percentage. Perfect for homemade tea, thick curds, and authentic sweets.',
     sizes: [
       { size: '500 ml', price: 32 },
@@ -92,11 +110,8 @@ export const initialProducts = [
     stock: 86,
     badge: 'Fresh',
     productType: 'Regular',
-    farmerId: 'farmer-2',
-    farmerName: 'Kovai Fresh Dairy',
-    farmLocation: 'Thondamuthur, Coimbatore',
-    image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=800&q=80',
-    description: 'Velvety soft, melt-in-mouth cottage cheese crafted from fresh whole milk within 4 hours of milking. Zero cornstarch or additives.',
+    image: '/images/products/fresh-paneer.jpg',
+    description: 'Velvety soft, melt-in-mouth cottage paneer crafted from fresh whole milk within 4 hours of milking. Zero cornstarch or additives.',
     sizes: [
       { size: '200 g', price: 120 },
       { size: '500 g', price: 280 }
@@ -118,10 +133,7 @@ export const initialProducts = [
     stock: 62,
     badge: 'Natural',
     productType: 'Regular',
-    farmerId: 'farmer-4',
-    farmerName: 'Anbu Dairy Farm',
-    farmLocation: 'Sulur, Coimbatore',
-    image: 'https://images.unsplash.com/photo-1571212515416-fef01fc43637?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/fresh-curd.jpg',
     description: 'Traditional set curd prepared with live active probiotic cultures. Creamy, mildly sour, and cooling for digestion.',
     sizes: [
       { size: '200 g', price: 40 },
@@ -144,10 +156,7 @@ export const initialProducts = [
     stock: 28,
     badge: 'Pure',
     productType: 'Organic',
-    farmerId: 'farmer-1',
-    farmerName: 'Ramasamy Farm',
-    farmLocation: 'Kovai, Coimbatore',
-    image: 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/pure-cow-ghee.jpg',
     description: 'Golden, aromatic bilona-churned cow ghee made from cultured butter. Granular texture with divine traditional aroma.',
     sizes: [
       { size: '200 g', price: 210 },
@@ -171,10 +180,7 @@ export const initialProducts = [
     stock: 45,
     badge: 'Creamy',
     productType: 'Regular',
-    farmerId: 'farmer-2',
-    farmerName: 'Kovai Fresh Dairy',
-    farmLocation: 'Thondamuthur, Coimbatore',
-    image: 'https://images.unsplash.com/photo-1589985270725-b873d6b1d4ef?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/fresh-butter.jpg',
     description: 'Unsalted traditional farm butter churned from cultured fresh cream. Pale yellow, rich and deeply nourishing.',
     sizes: [
       { size: '200 g', price: 95 },
@@ -197,10 +203,7 @@ export const initialProducts = [
     stock: 60,
     badge: 'Popular',
     productType: 'Regular',
-    farmerId: 'farmer-3',
-    farmerName: 'Marutham Organic',
-    farmLocation: 'Pollachi, Coimbatore',
-    image: 'https://images.unsplash.com/photo-1541658016709-82535e94bc69?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/chocolate-milk.jpg',
     description: 'Real cocoa blended with fresh double-toned farm milk. Lightly sweetened with unrefined cane sugar. Kids love it!',
     sizes: [
       { size: '200 ml', price: 35 }
@@ -222,10 +225,7 @@ export const initialProducts = [
     stock: 55,
     badge: 'New',
     productType: 'Regular',
-    farmerId: 'farmer-4',
-    farmerName: 'Anbu Dairy Farm',
-    farmLocation: 'Sulur, Coimbatore',
-    image: 'https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/strawberry-milk.jpg',
     description: 'Sweet and fruity strawberry extract paired with wholesome fresh milk. A refreshing chilled treat.',
     sizes: [
       { size: '200 ml', price: 35 }
@@ -247,10 +247,7 @@ export const initialProducts = [
     stock: 40,
     badge: 'Bestseller',
     productType: 'Regular',
-    farmerId: 'farmer-1',
-    farmerName: 'Ramasamy Farm',
-    farmLocation: 'Kovai, Coimbatore',
-    image: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/badam-milk.jpg',
     description: 'Enriched with real California almond flakes, pure saffron strands, and green cardamom. Served chilled.',
     sizes: [
       { size: '200 ml', price: 40 }
@@ -272,10 +269,7 @@ export const initialProducts = [
     stock: 80,
     badge: 'Organic',
     productType: 'Organic',
-    farmerId: 'farmer-3',
-    farmerName: 'Marutham Organic',
-    farmLocation: 'Pollachi, Coimbatore',
-    image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/organic-milk.jpg',
     description: 'Certified 100% organic farm milk from free-range pastured cows. Fed organic clover, lucerne and natural fodder.',
     sizes: [
       { size: '1 L', price: 65 },
@@ -298,39 +292,11 @@ export const initialProducts = [
     stock: 76,
     badge: 'Refreshing',
     productType: 'Regular',
-    farmerId: 'farmer-1',
-    farmerName: 'Ramasamy Farm',
-    farmLocation: 'Kovai, Coimbatore',
-    image: 'https://images.unsplash.com/photo-1517438476312-10d79c31cae9?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/fresh-buttermilk.jpg',
     description: 'Traditional spiced buttermilk tempered with fresh ginger, green chillies, curry leaves, and a pinch of asafoetida.',
     sizes: [
       { size: '500 ml', price: 25 },
       { size: '1 L', price: 45 }
-    ],
-    status: 'approved',
-    featured: false
-  },
-  {
-    id: 'prod-13',
-    name: 'Mozzarella Cheese',
-    category: 'Other Products',
-    unit: '200 g',
-    price: 150,
-    originalPrice: 175,
-    discount: '14% OFF',
-    rating: 4.8,
-    reviewsCount: 47,
-    inStock: true,
-    stock: 32,
-    badge: 'Artisanal',
-    productType: 'Regular',
-    farmerId: 'farmer-2',
-    farmerName: 'Kovai Fresh Dairy',
-    farmLocation: 'Thondamuthur, Coimbatore',
-    image: 'https://images.unsplash.com/photo-1559561853-08451507cbe7?auto=format&fit=crop&w=800&q=80',
-    description: 'Freshly stretched artisan mozzarella with superior melt and stretch. Perfect for homemade pizzas and toasts.',
-    sizes: [
-      { size: '200 g', price: 150 }
     ],
     status: 'approved',
     featured: false
@@ -349,10 +315,7 @@ export const initialProducts = [
     stock: 42,
     badge: 'Rich',
     productType: 'Regular',
-    farmerId: 'farmer-4',
-    farmerName: 'Anbu Dairy Farm',
-    farmLocation: 'Sulur, Coimbatore',
-    image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/milk-cream.jpg',
     description: 'Thick pasteurized malai / cream skimmed from morning whole milk. Great for gravies, coffees, and whipping desserts.',
     sizes: [
       { size: '250 ml', price: 80 }
@@ -374,10 +337,7 @@ export const initialProducts = [
     stock: 25,
     badge: 'Value Pack',
     productType: 'Regular',
-    farmerId: 'farmer-2',
-    farmerName: 'Kovai Fresh Dairy',
-    farmLocation: 'Thondamuthur, Coimbatore',
-    image: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=800&q=80',
+    image: '/images/products/dairy-combo-pack.jpg',
     description: 'Ultimate family breakfast combo: 1L Fresh Cow Milk + 200g Fresh Paneer + 200g Set Curd + 100g Salted Butter.',
     sizes: [
       { size: '1 Pack', price: 299 }
@@ -388,12 +348,12 @@ export const initialProducts = [
 ];
 
 export const productCategories = [
-  { id: 'all', name: 'All Products', count: 15, icon: 'LayoutGrid' },
+  { id: 'all', name: 'All Products', count: 14, icon: 'LayoutGrid' },
   { id: 'fresh-milk', name: 'Fresh Milk', count: 4, icon: 'Milk' },
-  { id: 'paneer', name: 'Paneer', count: 2, icon: 'Box' },
-  { id: 'curd', name: 'Curd', count: 2, icon: 'Soup' },
-  { id: 'ghee', name: 'Ghee', count: 2, icon: 'Flame' },
-  { id: 'butter', name: 'Butter', count: 2, icon: 'Square' },
+  { id: 'paneer', name: 'Paneer', count: 1, icon: 'Box' },
+  { id: 'curd', name: 'Curd', count: 1, icon: 'Soup' },
+  { id: 'ghee', name: 'Ghee', count: 1, icon: 'Flame' },
+  { id: 'butter', name: 'Butter', count: 1, icon: 'Square' },
   { id: 'flavored-milk', name: 'Flavored Milk', count: 3, icon: 'Coffee' },
-  { id: 'other-products', name: 'Other Products', count: 4, icon: 'Sparkles' }
+  { id: 'other-products', name: 'Other Products', count: 3, icon: 'Sparkles' }
 ];

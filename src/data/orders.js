@@ -15,32 +15,26 @@ export const initialOrders = [
       {
         id: 'prod-1',
         name: 'Fresh Cow Milk',
-        farmerName: 'Ramasamy Farm',
-        farmerId: 'farmer-1',
         unit: '500 ml',
         price: 28,
         quantity: 1,
-        image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=400&q=80'
+        image: '/images/products/fresh-cow-milk.jpg'
       },
       {
         id: 'prod-4',
         name: 'Fresh Paneer',
-        farmerName: 'Kovai Fresh Dairy',
-        farmerId: 'farmer-2',
         unit: '200 g',
         price: 120,
         quantity: 1,
-        image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=400&q=80'
+        image: '/images/products/fresh-paneer.jpg'
       },
       {
         id: 'prod-5',
         name: 'Fresh Curd',
-        farmerName: 'Anbu Dairy Farm',
-        farmerId: 'farmer-4',
         unit: '200 g',
         price: 40,
         quantity: 1,
-        image: 'https://images.unsplash.com/photo-1571212515416-fef01fc43637?auto=format&fit=crop&w=400&q=80'
+        image: '/images/products/fresh-curd.jpg'
       }
     ],
     itemTotal: 188,
@@ -83,22 +77,18 @@ export const initialOrders = [
       {
         id: 'prod-5',
         name: 'Fresh Curd',
-        farmerName: 'Anbu Dairy Farm',
-        farmerId: 'farmer-4',
         unit: '200 g',
         price: 40,
         quantity: 2,
-        image: 'https://images.unsplash.com/photo-1571212515416-fef01fc43637?auto=format&fit=crop&w=400&q=80'
+        image: '/images/products/fresh-curd.jpg'
       },
       {
         id: 'prod-4',
         name: 'Fresh Paneer',
-        farmerName: 'Kovai Fresh Dairy',
-        farmerId: 'farmer-2',
         unit: '200 g',
         price: 120,
         quantity: 1,
-        image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=400&q=80'
+        image: '/images/products/fresh-paneer.jpg'
       }
     ],
     itemTotal: 200,
@@ -136,22 +126,18 @@ export const initialOrders = [
       {
         id: 'prod-2',
         name: 'A2 Cow Milk',
-        farmerName: 'Marutham Organic',
-        farmerId: 'farmer-3',
         unit: '500 ml',
         price: 35,
         quantity: 2,
-        image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=400&q=80'
+        image: '/images/products/a2-cow-milk.jpg'
       },
       {
         id: 'prod-6',
         name: 'Pure Cow Ghee',
-        farmerName: 'Ramasamy Farm',
-        farmerId: 'farmer-1',
         unit: '500 g',
         price: 480,
         quantity: 1,
-        image: 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=400&q=80'
+        image: '/images/products/pure-cow-ghee.jpg'
       }
     ],
     itemTotal: 550,

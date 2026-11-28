@@ -4,9 +4,7 @@ import {
   CheckCircle2,
   Clock,
   MapPin,
-  CreditCard,
   Smartphone,
-  Building,
   Banknote,
   Plus,
   ShieldCheck,
@@ -19,9 +17,17 @@ import {
 import { useCart } from '../../context/CartContext';
 import { useApp } from '../../context/AppContext';
 import { useAuth } from '../../context/AuthContext';
+import { handleProductImageError, parseValidPrice, parseValidQuantity } from '../../data/products';
+
+const UPI_APPS = [
+  { id: 'gpay', label: 'Google Pay', emoji: '🟢' },
+  { id: 'phonepe', label: 'PhonePe', emoji: '🟣' },
+  { id: 'paytm', label: 'Paytm', emoji: '🔵' },
+  { id: 'bhim', label: 'BHIM UPI', emoji: '🇮🇳' }
+];
 
 export default function Checkout() {
-  const { cartItems, subtotal, deliveryCharge, platformFee, discount, grandTotal, clearCart } = useCart();
+  const { cartItems, hasInvalidPrice, subtotal, deliveryCharge, platformFee, discount, grandTotal, clearCart } = useCart();
   const { createOrder } = useApp();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
@@ -51,7 +57,8 @@ export default function Checkout() {
 
   // Selected Payment
   const [paymentMethod, setPaymentMethod] = useState('UPI');
-  const [upiId, setUpiId] = useState('priya@okhdfcbank');
+  const [selectedUpiApp, setSelectedUpiApp] = useState('gpay');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Add Address Modal
   const [showAddAddrModal, setShowAddAddrModal] = useState(false);
@@ -87,7 +94,14 @@ export default function Checkout() {
   };
 
   const handlePlaceOrder = () => {
+    if (isSubmitting || hasInvalidPrice || grandTotal === null) return;
+    setIsSubmitting(true);
+
     const chosenAddr = addresses.find(a => a.id === selectedAddress) || addresses[0];
+    const payLabel = paymentMethod === 'UPI'
+      ? `UPI - ${UPI_APPS.find(u => u.id === selectedUpiApp)?.label || selectedUpiApp}`
+      : paymentMethod;
+
     const newOrder = createOrder({
       customerName: currentUser?.name || 'Priya S',
       customerEmail: currentUser?.email || 'priya.s@gmail.com',
@@ -95,7 +109,8 @@ export default function Checkout() {
       deliveryAddress: `${chosenAddr.street}, ${chosenAddr.city}`,
       deliverySlot: `${deliveryDate} • ${deliverySlot}`,
       deliveryDate: deliveryDate,
-      paymentMethod: paymentMethod,
+      paymentMethod: payLabel,
+      paymentStatus: 'Pending',
       items: cartItems,
       itemTotal: subtotal,
       deliveryCharge: deliveryCharge,
@@ -111,7 +126,7 @@ export default function Checkout() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       
-      {/* Top Banner & Heading (Matches Page 4) */}
+      {/* Top Banner & Heading */}
       <div className="border-b border-gray-200 pb-6">
         <h1 className="text-3xl font-extrabold text-gray-900 font-display">
           Secure Checkout
@@ -273,8 +288,8 @@ export default function Checkout() {
                   <div className="flex items-center space-x-3">
                     <Smartphone className="w-5 h-5 text-[#146B3A]" />
                     <div>
-                      <h4 className="font-bold text-sm text-gray-900">UPI (Instant 0% Fee)</h4>
-                      <p className="text-xs text-gray-500">Google Pay, PhonePe, Paytm, BHIM</p>
+                      <h4 className="font-bold text-sm text-gray-900">UPI Payment (0% Fee)</h4>
+                      <p className="text-xs text-gray-500">Google Pay, PhonePe, Paytm, BHIM UPI</p>
                     </div>
                   </div>
                   <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
@@ -285,63 +300,33 @@ export default function Checkout() {
                 </div>
 
                 {paymentMethod === 'UPI' && (
-                  <div className="mt-3 pt-3 border-t border-emerald-100 flex items-center space-x-2">
-                    <input
-                      type="text"
-                      value={upiId}
-                      onChange={(e) => setUpiId(e.target.value)}
-                      placeholder="e.g. mobile@upi"
-                      className="text-xs px-3 py-2 bg-white border border-gray-200 rounded-xl flex-1 focus:outline-none focus:ring-1 focus:ring-[#146B3A]"
-                    />
-                    <span className="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-1 rounded-lg">Verified</span>
+                  <div className="mt-4 pt-3 border-t border-emerald-100 space-y-3">
+                    <p className="text-xs font-semibold text-gray-600">Select UPI App:</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      {UPI_APPS.map((app) => (
+                        <button
+                          key={app.id}
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); setSelectedUpiApp(app.id); }}
+                          className={`flex flex-col items-center p-2.5 rounded-xl border-2 transition text-xs font-bold ${
+                            selectedUpiApp === app.id
+                              ? 'border-[#146B3A] bg-emerald-50 text-[#146B3A]'
+                              : 'border-gray-200 text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          <span className="text-2xl mb-1">{app.emoji}</span>
+                          <span className="text-[10px]">{app.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
+                      <p className="font-bold">ℹ️ Payment Pending Until Verified</p>
+                      <p className="mt-0.5 text-amber-700">
+                        No payment gateway is connected. Your order will be placed and payment status set to <strong>Pending</strong>. Amount: <strong>₹{grandTotal}</strong>
+                      </p>
+                    </div>
                   </div>
                 )}
-              </div>
-
-              {/* Credit / Debit Card */}
-              <div
-                onClick={() => setPaymentMethod('Card')}
-                className={`p-4 rounded-2xl border-2 cursor-pointer transition ${
-                  paymentMethod === 'Card' ? 'border-[#146B3A] bg-emerald-50/40' : 'border-gray-200'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <CreditCard className="w-5 h-5 text-[#146B3A]" />
-                    <div>
-                      <h4 className="font-bold text-sm text-gray-900">Credit / Debit Card</h4>
-                      <p className="text-xs text-gray-500">Visa, MasterCard, RuPay</p>
-                    </div>
-                  </div>
-                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                    paymentMethod === 'Card' ? 'border-[#146B3A] bg-[#146B3A]' : 'border-gray-300'
-                  }`}>
-                    {paymentMethod === 'Card' && <div className="w-1.5 h-1.5 rounded-full bg-white"></div>}
-                  </div>
-                </div>
-              </div>
-
-              {/* Net Banking */}
-              <div
-                onClick={() => setPaymentMethod('Net Banking')}
-                className={`p-4 rounded-2xl border-2 cursor-pointer transition ${
-                  paymentMethod === 'Net Banking' ? 'border-[#146B3A] bg-emerald-50/40' : 'border-gray-200'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <Building className="w-5 h-5 text-[#146B3A]" />
-                    <div>
-                      <h4 className="font-bold text-sm text-gray-900">Net Banking</h4>
-                      <p className="text-xs text-gray-500">SBI, HDFC, ICICI, Axis & all major banks</p>
-                    </div>
-                  </div>
-                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                    paymentMethod === 'Net Banking' ? 'border-[#146B3A] bg-[#146B3A]' : 'border-gray-300'
-                  }`}>
-                    {paymentMethod === 'Net Banking' && <div className="w-1.5 h-1.5 rounded-full bg-white"></div>}
-                  </div>
-                </div>
               </div>
 
               {/* Cash on Delivery */}
@@ -356,7 +341,7 @@ export default function Checkout() {
                     <Banknote className="w-5 h-5 text-[#146B3A]" />
                     <div>
                       <h4 className="font-bold text-sm text-gray-900">Cash on Delivery</h4>
-                      <p className="text-xs text-gray-500">Pay when fresh bottles arrive</p>
+                      <p className="text-xs text-gray-500">Pay when fresh bottles arrive at your door</p>
                     </div>
                   </div>
                   <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
@@ -365,13 +350,16 @@ export default function Checkout() {
                     {paymentMethod === 'Cash on Delivery' && <div className="w-1.5 h-1.5 rounded-full bg-white"></div>}
                   </div>
                 </div>
+
+                {paymentMethod === 'Cash on Delivery' && (
+                  <div className="mt-3 pt-3 border-t border-emerald-100">
+                    <p className="text-xs text-gray-600 bg-gray-50 rounded-xl p-3">
+                      💵 Keep <strong>₹{grandTotal}</strong> ready when our delivery partner arrives. Payment status will be <strong>Pending</strong> until confirmed by rider.
+                    </p>
+                  </div>
+                )}
               </div>
 
-            </div>
-
-            <div className="pt-2 flex items-center space-x-2 text-xs text-gray-500">
-              <input type="checkbox" id="savePay" defaultChecked className="accent-[#146B3A]" />
-              <label htmlFor="savePay" className="cursor-pointer">Save this payment method for future orders</label>
             </div>
           </div>
 
@@ -392,25 +380,35 @@ export default function Checkout() {
 
             {/* Items mini list */}
             <div className="divide-y divide-gray-100 max-h-56 overflow-y-auto space-y-2 pr-1">
-              {cartItems.map((item) => (
+              {cartItems.map((item) => {
+                const unitPrice = parseValidPrice(item.price);
+                const qty = parseValidQuantity(item.quantity, 1);
+                return (
                 <div key={item.id} className="pt-2 first:pt-0 flex items-center justify-between text-xs">
                   <div className="flex items-center space-x-3">
-                    <img src={item.image} alt={item.name} className="w-10 h-10 rounded-xl object-cover bg-stone-100" />
+                    <img src={item.image} alt={item.name} onError={handleProductImageError} className="w-10 h-10 rounded-xl object-cover bg-stone-100" />
                     <div>
                       <p className="font-bold text-gray-900 truncate max-w-[170px]">{item.name}</p>
-                      <p className="text-[10px] text-gray-400">{item.unit} x {item.quantity}</p>
+                      <p className="text-[10px] text-gray-400">{item.unit} x {qty}</p>
                     </div>
                   </div>
-                  <span className="font-bold text-gray-900 font-display">₹{item.price * item.quantity}</span>
+                  <span className="font-bold text-gray-900 font-display">{unitPrice !== null ? `₹${unitPrice * qty}` : '—'}</span>
                 </div>
-              ))}
+                );
+              })}
             </div>
+
+            {hasInvalidPrice && (
+              <div className="bg-rose-50 border border-rose-200 text-rose-800 rounded-xl p-3 text-xs font-semibold">
+                Invalid product price detected in your cart. Please update your cart before placing the order.
+              </div>
+            )}
 
             {/* Calculations */}
             <div className="pt-4 border-t border-gray-100 space-y-2.5 text-xs text-gray-600">
               <div className="flex items-center justify-between">
                 <span>Item Total</span>
-                <span className="font-bold text-gray-900 text-sm">₹{subtotal}</span>
+                <span className="font-bold text-gray-900 text-sm">{subtotal !== null ? `₹${subtotal}` : '—'}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span>Delivery Charges</span>
@@ -430,17 +428,18 @@ export default function Checkout() {
               )}
               <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-base font-extrabold text-gray-900">
                 <span>Total Amount</span>
-                <span className="text-2xl text-[#146B3A] font-display">₹{grandTotal}</span>
+                <span className="text-2xl text-[#146B3A] font-display">{grandTotal !== null ? `₹${grandTotal}` : '—'}</span>
               </div>
             </div>
 
             {/* Big Place Order Button */}
             <button
               onClick={handlePlaceOrder}
-              className="w-full flex items-center justify-center space-x-2 bg-[#146B3A] hover:bg-[#064E32] text-white py-4 rounded-2xl font-bold text-base shadow-xl shadow-green-900/20 transition transform hover:-translate-y-0.5 active:translate-y-0"
+              disabled={isSubmitting || cartItems.length === 0 || hasInvalidPrice}
+              className="w-full flex items-center justify-center space-x-2 bg-[#146B3A] hover:bg-[#064E32] disabled:opacity-60 disabled:cursor-not-allowed text-white py-4 rounded-2xl font-bold text-base shadow-xl shadow-green-900/20 transition transform hover:-translate-y-0.5 active:translate-y-0"
             >
               <Lock className="w-4 h-4 text-emerald-200" />
-              <span>Place Order (₹{grandTotal})</span>
+              <span>Place Order ({grandTotal !== null ? `₹${grandTotal}` : 'Invalid'})</span>
             </button>
 
             <p className="text-[11px] text-gray-400 text-center">
@@ -461,7 +460,7 @@ export default function Checkout() {
               <div>
                 <label className="text-xs font-semibold text-gray-500">Address Label</label>
                 <div className="flex space-x-2 mt-1">
-                  {['Home', 'Work', 'Farm', 'Other'].map((lbl) => (
+                  {['Home', 'Work', 'Other'].map((lbl) => (
                     <button
                       key={lbl}
                       type="button"

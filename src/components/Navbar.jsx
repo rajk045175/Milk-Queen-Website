@@ -4,36 +4,29 @@ import {
   ShoppingBag,
   Heart,
   Search,
-  MapPin,
   User,
   ChevronDown,
   Menu,
   X,
   Sparkles,
   ShieldCheck,
-  Tractor,
   Bike,
   LogOut,
   CalendarCheck
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { useApp } from '../context/AppContext';
 
 export default function Navbar() {
   const { currentUser, switchRole, logout } = useAuth();
   const { totalItemCount, wishlist } = useCart();
-  const { currentLocation, setCurrentLocation } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [locationDropdownOpen, setLocationDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-
-  const locationsList = ['Coimbatore', 'Pollachi', 'Tiruppur', 'Erode', 'Salem'];
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -46,8 +39,6 @@ export default function Navbar() {
   const navLinks = [
     { label: 'Home', path: '/' },
     { label: 'Products', path: '/products' },
-    { label: 'Our Farmers', path: '/farmers' },
-    { label: 'Farmer Registration', path: '/farmer-register', highlight: true },
     { label: 'Subscriptions', path: '/subscription' },
     { label: 'About Us', path: '/about' },
     { label: 'Contact', path: '/contact' }
@@ -73,12 +64,6 @@ export default function Navbar() {
             className={`px-2.5 py-0.5 rounded-lg transition ${currentUser?.role === 'customer' ? 'bg-[#146B3A] text-white font-bold' : 'bg-green-900/60 text-green-200 hover:bg-green-800'}`}
           >
             👤 Customer
-          </button>
-          <button
-            onClick={() => { switchRole('farmer'); navigate('/farmer/dashboard'); }}
-            className={`px-2.5 py-0.5 rounded-lg transition ${currentUser?.role === 'farmer' ? 'bg-[#146B3A] text-white font-bold' : 'bg-green-900/60 text-green-200 hover:bg-green-800'}`}
-          >
-            👨‍🌾 Farmer
           </button>
           <button
             onClick={() => { switchRole('admin'); navigate('/admin/dashboard'); }}
@@ -117,39 +102,6 @@ export default function Navbar() {
                   </span>
                 </div>
               </Link>
-
-              {/* Location Selector */}
-              <div className="relative hidden xl:block">
-                <button
-                  onClick={() => setLocationDropdownOpen(!locationDropdownOpen)}
-                  className="flex items-center space-x-1.5 text-xs font-semibold text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200/80 px-3 py-1.5 rounded-full transition"
-                >
-                  <MapPin className="w-3.5 h-3.5 text-[#146B3A]" />
-                  <span>{currentLocation}</span>
-                  <ChevronDown className="w-3 h-3 text-gray-400" />
-                </button>
-
-                {locationDropdownOpen && (
-                  <div className="absolute left-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-gray-100 py-1.5 z-50">
-                    <div className="px-3 py-1 text-[11px] font-semibold text-gray-400 uppercase">Select Location</div>
-                    {locationsList.map((loc) => (
-                      <button
-                        key={loc}
-                        onClick={() => {
-                          setCurrentLocation(loc);
-                          setLocationDropdownOpen(false);
-                        }}
-                        className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-emerald-50 hover:text-[#146B3A] ${
-                          currentLocation === loc ? 'text-[#146B3A] font-bold bg-emerald-50/50' : 'text-gray-700'
-                        }`}
-                      >
-                        <span>{loc}</span>
-                        {currentLocation === loc && <span className="w-1.5 h-1.5 rounded-full bg-[#146B3A]"></span>}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
             </div>
 
             {/* Desktop Navigation Links */}
@@ -161,14 +113,11 @@ export default function Navbar() {
                     key={link.path}
                     to={link.path}
                     className={`px-3 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1 ${
-                      link.highlight
-                        ? 'bg-emerald-50 text-[#146B3A] border border-emerald-200/80 hover:bg-emerald-100'
-                        : isActive
+                      isActive
                         ? 'text-[#146B3A] bg-[#EAF5EC]'
                         : 'text-gray-600 hover:text-[#146B3A] hover:bg-gray-50'
                     }`}
                   >
-                    {link.highlight && <Tractor className="w-3.5 h-3.5 text-[#146B3A]" />}
                     <span>{link.label}</span>
                   </Link>
                 );
@@ -256,24 +205,7 @@ export default function Navbar() {
                           >
                             <ShoppingBag className="w-4 h-4 mr-3 text-gray-400" /> My Orders & Tracking
                           </Link>
-                          <Link
-                            to="/farmer-register"
-                            onClick={() => setProfileDropdownOpen(false)}
-                            className="flex items-center px-4 py-2 text-[#146B3A] hover:bg-emerald-50 font-bold"
-                          >
-                            <Tractor className="w-4 h-4 mr-3 text-[#146B3A]" /> Register as Farmer
-                          </Link>
                         </>
-                      )}
-
-                      {currentUser?.role === 'farmer' && (
-                        <Link
-                          to="/farmer/dashboard"
-                          onClick={() => setProfileDropdownOpen(false)}
-                          className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 font-semibold"
-                        >
-                          <Tractor className="w-4 h-4 mr-3 text-[#146B3A]" /> Farmer Dashboard
-                        </Link>
                       )}
 
                       {currentUser?.role === 'admin' && (

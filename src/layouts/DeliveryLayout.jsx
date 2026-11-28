@@ -64,14 +64,12 @@ export default function DeliveryLayout({ children }) {
               onChange={(e) => {
                 switchRole(e.target.value);
                 if (e.target.value === 'customer') navigate('/');
-                if (e.target.value === 'farmer') navigate('/farmer/dashboard');
                 if (e.target.value === 'admin') navigate('/admin/dashboard');
               }}
               className="text-xs bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 font-semibold text-gray-700"
             >
               <option value="delivery">Delivery View</option>
               <option value="customer">Switch to Customer</option>
-              <option value="farmer">Switch to Farmer</option>
               <option value="admin">Switch to Admin</option>
             </select>
 

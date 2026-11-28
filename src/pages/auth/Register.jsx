@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Tractor, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Register() {
@@ -23,8 +23,7 @@ export default function Register() {
       avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80'
     });
 
-    if (role === 'farmer') navigate('/farmer/dashboard');
-    else if (role === 'delivery') navigate('/delivery/dashboard');
+    if (role === 'delivery') navigate('/delivery/dashboard');
     else navigate('/');
   };
 
@@ -47,23 +46,6 @@ export default function Register() {
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md px-4">
         <div className="bg-white py-8 px-6 sm:px-10 rounded-3xl shadow-xl border border-gray-100 space-y-6">
           
-          {/* Note for farmers */}
-          <div className="bg-emerald-50 border border-emerald-200 p-3.5 rounded-2xl text-xs space-y-1.5">
-            <div className="flex items-center space-x-1.5 font-bold text-[#146B3A]">
-              <Tractor className="w-4 h-4" />
-              <span>Are you applying as a Dairy Farmer?</span>
-            </div>
-            <p className="text-gray-600 leading-relaxed text-[11px]">
-              Farmers require KYC document upload and Admin approval.
-            </p>
-            <Link
-              to="/farmer-register"
-              className="inline-block text-[11px] font-bold text-[#146B3A] underline"
-            >
-              Go to Farmer Registration & Document Application ➔
-            </Link>
-          </div>
-
           <form onSubmit={handleRegister} className="space-y-4 text-xs">
             <div>
               <label className="font-semibold text-gray-700 block mb-1">Account Role</label>
@@ -74,7 +56,6 @@ export default function Register() {
               >
                 <option value="customer">Customer (Buy Fresh Dairy)</option>
                 <option value="delivery">Delivery Partner (Earn per delivery)</option>
-                <option value="farmer">Farmer (Quick Account)</option>
               </select>
             </div>
 

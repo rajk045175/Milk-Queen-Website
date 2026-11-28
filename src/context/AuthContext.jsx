@@ -12,17 +12,6 @@ export const demoAccounts = {
     address: '12, R.S. Puram Main Road, Coimbatore',
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80'
   },
-  farmer: {
-    id: 'farmer-1',
-    role: 'farmer',
-    name: 'Ramasamy',
-    farmName: 'Ramasamy Farm',
-    email: 'ramasamyfarm@gmail.com',
-    phone: '+91 98765 43210',
-    location: 'Kovai, Coimbatore',
-    isVerified: true,
-    avatar: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=300&q=80'
-  },
   admin: {
     id: 'admin-1',
     role: 'admin',
@@ -50,7 +39,12 @@ export const demoAccounts = {
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(() => {
     const saved = localStorage.getItem('dc_current_user');
-    return saved ? JSON.parse(saved) : demoAccounts.customer;
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && parsed.role === 'farmer') return demoAccounts.customer;
+      return parsed;
+    }
+    return demoAccounts.customer;
   });
 
   useEffect(() => {
